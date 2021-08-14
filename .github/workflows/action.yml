@@ -1,0 +1,25 @@
+name: pdf-resume-export
+on: push
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        env:
+            LATEX: pdflatex -shell-escape
+        steps:
+            - uses: actions/checkout@v2
+            - name: Install texlive
+              run: |
+                  sudo apt-get install texlive-publishers \
+                                       texlive-latex-recommended \
+                                       texlive-latex-extra \
+                                       texlive-fonts-recommended \
+                                       texlive-fonts-extra
+            - name: Build pdf
+              run: |
+                  ${LATEX} *.tex
+            - name: Commit pdf
+              uses: EndBug/add-and-commit@v7
+              with:
+                  default-author: github-actions
+                  message: "Update pdf"
+                  add: "*.pdf"
